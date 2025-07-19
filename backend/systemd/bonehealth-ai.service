@@ -1,0 +1,28 @@
+[Unit]
+Description=BoneHealth AI Backend Service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=threatseal
+Group=threatseal
+WorkingDirectory=/home/threatseal/projects/bonehealth_ai/bonehealth_ai/backend
+Environment=PATH=/home/threatseal/projects/bonehealth_ai/.venv/bin
+Environment=PYTHONPATH=/home/threatseal/projects/bonehealth_ai/bonehealth_ai/backend
+ExecStart=/home/threatseal/projects/bonehealth_ai/.venv/bin/python -m uvicorn api:app --host 0.0.0.0 --port 8000 --workers 1 --log-level info
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=bonehealth-ai
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/home/threatseal/projects/bonehealth_ai/bonehealth_ai/backend
+
+[Install]
+WantedBy=multi-user.target 
