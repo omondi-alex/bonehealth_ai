@@ -35,28 +35,8 @@ export default function DashboardLayout({ children, activeTab, setActiveTab }: {
 
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-blue-50 to-green-50">
-      {/* Mobile Menu Button */}
-      <button
-        onClick={toggleSidebar}
-        className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg hover:bg-gray-50 transition-colors"
-      >
-        {isSidebarOpen ? (
-          <FiX className="w-6 h-6 text-gray-700" />
-        ) : (
-          <FiMenu className="w-6 h-6 text-gray-700" />
-        )}
-      </button>
-
-      {/* Mobile Overlay */}
-      {isSidebarOpen && (
-        <div 
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-64 bg-white bg-opacity-95 border-r border-blue-100 flex flex-col items-center py-8 shadow-2xl transform transition-transform duration-300 ease-in-out ${
+      {/* Sidebar (unchanged, but z-50 for topmost) */}
+      <aside className={`fixed md:static inset-y-0 left-0 z-50 w-64 bg-white bg-opacity-95 border-r border-blue-100 flex flex-col items-center py-8 shadow-2xl transform transition-transform duration-300 ease-in-out ${
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
       }`}>
         <div className="mb-10 flex flex-col items-center">
@@ -87,12 +67,40 @@ export default function DashboardLayout({ children, activeTab, setActiveTab }: {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-green-50 md:ml-0">
-        {/* Mobile Header */}
-        <div className="md:hidden bg-white bg-opacity-95 border-b border-blue-100 px-4 py-4 shadow-sm">
-          <div className="flex items-center justify-center">
-            <div className="text-2xl font-extrabold text-blue-700 tracking-tight">BoneHealth AI</div>
+        {/* Mobile Navbar (matches landing page) */}
+        <nav className="md:hidden w-full bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center py-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">BH</span>
+                </div>
+                <span className="font-bold text-xl text-gray-900">BoneHealth AI</span>
+              </div>
+              {/* Mobile Menu Button on the right */}
+              <button
+                onClick={toggleSidebar}
+                className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                aria-label="Toggle menu"
+              >
+                {isSidebarOpen ? (
+                  <FiX className="w-6 h-6 text-gray-700" />
+                ) : (
+                  <FiMenu className="w-6 h-6 text-gray-700" />
+                )}
+              </button>
+            </div>
           </div>
-        </div>
+        </nav>
+        {/* Mobile Overlay (z-40, below sidebar) */}
+        {isSidebarOpen && (
+          <div 
+            className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+        {/* Remove old mobile header */}
+        {/* {children} */}
         {children}
       </main>
     </div>

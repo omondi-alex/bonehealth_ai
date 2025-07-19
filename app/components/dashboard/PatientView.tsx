@@ -39,20 +39,20 @@ export default function PatientView() {
   }
 
   return (
-    <div className="space-y-8 max-w-3xl mx-auto bg-white bg-opacity-95 rounded-2xl shadow-2xl p-10">
+    <div className="space-y-8 max-w-3xl w-full mx-auto bg-white bg-opacity-95 rounded-2xl shadow-2xl p-4 sm:p-8 md:p-10 overflow-x-auto">
       <h1 className="text-2xl md:text-3xl font-bold mb-6 text-gray-900">Patient View: Your Osteoporosis Risk</h1>
       {riskPercent !== null && (
-        <div className="bg-blue-50 rounded-xl p-8 flex flex-col items-center shadow mb-4">
+        <div className="bg-blue-50 rounded-xl p-4 sm:p-6 md:p-8 flex flex-col items-center shadow mb-4 w-full">
           <div className="text-lg font-semibold text-blue-800 mb-2">Understand Your Estimated Risk</div>
           <div className={`text-6xl font-extrabold mb-2 ${riskColor}`}>{riskPercent}%</div>
           <div className={`text-xl font-bold mb-4 ${riskColor}`}>{riskLabel}</div>
-          <div className="w-full max-w-lg h-3 bg-gray-200 rounded-full overflow-hidden mb-2">
+          <div className="w-full max-w-xs sm:max-w-md md:max-w-lg h-3 bg-gray-200 rounded-full overflow-hidden mb-2">
             <div className={`${barColor} h-3 rounded-full`} style={{ width: `${riskPercent}%` }} />
           </div>
         </div>
       )}
       {riskPercent !== null && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow">
+        <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 shadow w-full">
           <h2 className="text-lg font-bold mb-2 text-gray-900">What Does This Mean For You?</h2>
           <p className="mb-4 text-gray-800">
             Based on your information, our model estimates your likelihood of having osteoporosis. A score of <span className="font-bold">{riskPercent}%</span> means there's an estimated {riskPercent}% chance you might have osteoporosis. This is an estimate to help you and your doctor. It's not a diagnosis.
@@ -74,7 +74,7 @@ export default function PatientView() {
         </div>
       )}
       {riskPercent !== null && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6 shadow">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 sm:p-6 shadow w-full">
           <div className="font-bold text-lg text-red-700 mb-2">Important Disclaimer</div>
           <div className="mb-2 text-red-700 font-semibold">
             This tool provides an estimated risk only and is not a substitute for professional medical advice, diagnosis, or treatment.
