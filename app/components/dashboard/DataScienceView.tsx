@@ -41,7 +41,7 @@ export default function DataScienceView() {
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:8000/api/data-science-metrics")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/data-science-metrics`)
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
