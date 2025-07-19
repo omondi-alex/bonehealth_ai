@@ -13,7 +13,7 @@ const tabs = [
   { label: "Overview", component: <Overview /> },
   { label: "Clinical Insights", component: <ClinicalInsights /> },
   { label: "Data Scientist View", component: <DataScienceView /> },
-  { label: "Patient-Friendly View", component: <PatientView /> },
+  { label: "Patient View", component: <PatientView /> },
 ];
 
 // Define initialForm here to pass to the provider

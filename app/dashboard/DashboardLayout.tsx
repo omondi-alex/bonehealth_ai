@@ -6,8 +6,8 @@ import { FiMenu, FiX, FiLogOut } from 'react-icons/fi';
 const navItems = [
   { label: "Overview", icon: "🏥" },
   { label: "Clinical Insights", icon: "🩺" },
-  { label: "Data Science View", icon: "📊" },
-  { label: "Patient-Friendly View", icon: "👨‍⚕️" },
+  { label: "Data Scientist View", icon: "📊" },
+  { label: "Patient View", icon: "👨‍⚕️" },
 ];
 
 export default function DashboardLayout({ children, activeTab, setActiveTab }: {
