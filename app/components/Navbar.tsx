@@ -8,20 +8,8 @@ import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
   const [showLoginModal, setShowLoginModal] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    // Check login status on component mount
-    const loginStatus = localStorage.getItem('isLoggedIn');
-    const storedUsername = localStorage.getItem('username');
-    if (loginStatus === 'true' && storedUsername) {
-      setIsLoggedIn(true);
-      setUsername(storedUsername);
-    }
-  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -30,8 +18,6 @@ export default function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('username');
-    setIsLoggedIn(false);
-    setUsername('');
     setIsMenuOpen(false);
     // Redirect to homepage after logout
     window.location.href = '/';
@@ -39,9 +25,6 @@ export default function Navbar() {
 
   const handleLogin = (success: boolean) => {
     if (success) {
-      const storedUsername = localStorage.getItem('username');
-      setIsLoggedIn(true);
-      setUsername(storedUsername || '');
       setShowLoginModal(false);
     }
   };
@@ -51,18 +34,29 @@ export default function Navbar() {
     return null;
   }
 
+  // Always read login state from localStorage for render
+  const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('isLoggedIn') === 'true';
+  const username = typeof window !== 'undefined' ? localStorage.getItem('username') || '' : '';
+
   return (
     <>
       <nav className="w-full bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <Link href="/" className="flex items-center space-x-2">
+            <a
+              href="/"
+              className="flex items-center space-x-2"
+              onClick={e => {
+                // Always log out when going home
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('username');
+              }}
+            >
               <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">BH</span>
               </div>
               <span className="font-bold text-xl text-gray-900">BoneHealth AI</span>
-            </Link>
-            
+            </a>
             {/* Auth Section - visible on all screen sizes */}
             <div className="flex items-center gap-4">
               {isLoggedIn ? (
@@ -88,11 +82,7 @@ export default function Navbar() {
                 </button>
               )}
             </div>
-
-            {/* Mobile Menu Button */}
           </div>
-
-          {/* Mobile Navigation Menu */}
         </div>
       </nav>
 

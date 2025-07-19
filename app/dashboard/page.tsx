@@ -8,6 +8,7 @@ import { PredictionProvider } from "../components/dashboard/PredictionContext";
 import PredictionForm from "../components/dashboard/PredictionForm";
 import DashboardLayout from "./DashboardLayout";
 import { PatientFormProvider } from "../components/dashboard/PatientFormContext";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 const tabs = [
   { label: "Overview", component: <Overview /> },
@@ -38,15 +39,17 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <PredictionProvider>
-      <PatientFormProvider initialForm={initialForm}>
-        <DashboardLayout activeTab={activeTab} setActiveTab={setActiveTab}>
-          <div className="p-8 max-w-5xl mx-auto w-full">
-            {activeTab === 1 && <PredictionForm />}
-            <div className="bg-white rounded-xl shadow p-6 mt-6">{tabs[activeTab].component}</div>
-          </div>
-        </DashboardLayout>
-      </PatientFormProvider>
-    </PredictionProvider>
+    <ProtectedRoute>
+      <PredictionProvider>
+        <PatientFormProvider initialForm={initialForm}>
+          <DashboardLayout activeTab={activeTab} setActiveTab={setActiveTab}>
+            <div className="p-8 max-w-5xl mx-auto w-full">
+              {activeTab === 1 && <PredictionForm />}
+              <div className="bg-white rounded-xl shadow p-6 mt-6">{tabs[activeTab].component}</div>
+            </div>
+          </DashboardLayout>
+        </PatientFormProvider>
+      </PredictionProvider>
+    </ProtectedRoute>
   );
 } 

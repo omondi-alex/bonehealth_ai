@@ -52,6 +52,13 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    // Always log out when visiting the home page
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('username');
+    setIsLoggedIn(false);
+  }, []);
+
+  useEffect(() => {
     // Check if user is logged in from localStorage
     const loginStatus = localStorage.getItem('isLoggedIn');
     if (loginStatus === 'true') {
