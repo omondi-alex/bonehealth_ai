@@ -1,8 +1,112 @@
 import { usePrediction } from "./PredictionContext";
-import { FaStethoscope } from "react-icons/fa";
+import { usePatientForm } from "./PatientFormContext";
+import { FaStethoscope, FaUserMd, FaRegHospital, FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
+import type { ReactElement } from "react";
+
+function getPatientFactorSentence(feature: string, value: string, shap: number): { icon: string; text: string } {
+  if (feature === "Age") {
+    const age = parseInt(value, 10);
+    if (isNaN(age)) return { icon: "🎂", text: "We couldn't determine your age for this analysis." };
+    if (age < 40) return { icon: "🎂", text: `At ${age}, age is not a significant risk for osteoporosis.` };
+    if (age >= 65) return { icon: "🎂", text: `At ${age}, age is a major risk factor. Staying active and eating well is especially important.` };
+    if (age >= 50) return { icon: "🎂", text: `At ${age}, age moderately increases your risk. Keep up with healthy habits!` };
+    return { icon: "🎂", text: `At ${age}, age is a minor risk factor.` };
+  }
+  if (feature === "Gender") {
+    if (value === "Female") return { icon: "♀️", text: "Women are at higher risk for osteoporosis, especially after menopause." };
+    if (value === "Male") return { icon: "♂️", text: "Men have a lower risk, but bone health is still important as you age." };
+    return { icon: "⚧️", text: "We couldn't determine your gender for this analysis." };
+  }
+  if (feature === "Hormonal Changes") {
+    if (value === "Postmenopausal") return { icon: "🧬", text: "After menopause, bone loss can speed up. Regular checkups and calcium are important." };
+    return { icon: "🧬", text: "Normal hormone levels help protect your bones." };
+  }
+  if (feature === "Body Weight") {
+    if (value === "Underweight") return { icon: "⚖️", text: "Low body weight can increase your risk. Talk to your doctor about healthy nutrition." };
+    if (value === "Normal") return { icon: "⚖️", text: "Your body weight is in a healthy range for bone strength." };
+    return { icon: "⚖️", text: "We couldn't determine your body weight for this analysis." };
+  }
+  if (feature === "Calcium Intake") {
+    if (value === "Low") return { icon: "🥛", text: "Low calcium intake can weaken bones. Try to include more calcium-rich foods in your diet." };
+    if (value === "Adequate") return { icon: "🥛", text: "Great job getting enough calcium! This helps keep your bones strong." };
+    return { icon: "🥛", text: "We couldn't determine your calcium intake for this analysis." };
+  }
+  if (feature === "Physical Activity") {
+    if (value === "Sedentary") return { icon: "🏃", text: "Being more active can help strengthen your bones. Even walking helps!" };
+    if (value === "Active") return { icon: "🏃", text: "Your activity level is helping to protect your bones." };
+    return { icon: "🏃", text: "We couldn't determine your activity level for this analysis." };
+  }
+  if (feature === "Smoking") {
+    if (value === "Yes") return { icon: "🚬", text: "Smoking can weaken bones. Quitting is one of the best things you can do for your health." };
+    if (value === "No") return { icon: "🚭", text: "Not smoking helps keep your bones healthy." };
+    return { icon: "🚬", text: "We couldn't determine your smoking status for this analysis." };
+  }
+  if (feature === "Alcohol Consumption") {
+    if (value === "Moderate") return { icon: "🍷", text: "Drinking alcohol in moderation or more can increase your risk. Try to limit your intake." };
+    if (value === "None") return { icon: "🚱", text: "Not drinking alcohol helps protect your bones." };
+    return { icon: "🍷", text: "We couldn't determine your alcohol intake for this analysis." };
+  }
+  if (feature === "Family History") {
+    if (value === "Yes") return { icon: "👨‍👩‍👧‍👦", text: "A family history of osteoporosis means you should be extra proactive about bone health." };
+    if (value === "No") return { icon: "👨‍👩‍👧‍👦", text: "No family history helps lower your risk." };
+    return { icon: "👨‍👩‍👧‍👦", text: "We couldn't determine your family history for this analysis." };
+  }
+  if (feature === "Prior Fractures") {
+    if (value === "Yes") return { icon: "🦴", text: "A previous fracture is a strong sign to take extra care of your bones." };
+    if (value === "No") return { icon: "🦴", text: "No prior fractures is a good sign for your bone health." };
+    return { icon: "🦴", text: "We couldn't determine your fracture history for this analysis." };
+  }
+  // Fallback
+  if (shap > 0) return { icon: "💡", text: `${feature}: May increase your risk.` };
+  return { icon: "💡", text: `${feature}: May help protect your bones.` };
+}
+
+function getPatientSummary(riskPercent: number, riskLabel: string): { icon: ReactElement; color: string; text: string } {
+  if (riskPercent >= 70) {
+    return {
+      icon: <FaExclamationTriangle className="text-red-500 inline mr-2" />, color: "bg-red-50 border-red-400 text-red-900", text: `Your results show a HIGH risk for osteoporosis (${riskPercent}%). Please talk to your doctor soon about next steps. Early action can make a big difference!`
+    };
+  } else if (riskPercent >= 30) {
+    return {
+      icon: <FaStethoscope className="text-yellow-500 inline mr-2" />, color: "bg-yellow-50 border-yellow-400 text-yellow-900", text: `Your results show a MODERATE risk for osteoporosis (${riskPercent}%). Healthy habits and regular checkups are important for you.`
+    };
+  } else {
+    return {
+      icon: <FaCheckCircle className="text-green-500 inline mr-2" />, color: "bg-green-50 border-green-400 text-green-900", text: `Your results show a LOW risk for osteoporosis (${riskPercent}%). Keep up your healthy lifestyle and check in with your doctor as needed!`
+    };
+  }
+}
+
+function getPatientTips(riskPercent: number): string[] {
+  if (riskPercent >= 70) {
+    return [
+      "Schedule a checkup with your doctor soon.",
+      "Ask about a bone density scan (DEXA).",
+      "Eat foods rich in calcium and vitamin D.",
+      "Stay active with weight-bearing exercise.",
+      "Avoid smoking and limit alcohol.",
+      "Discuss medications or supplements if recommended."
+    ];
+  } else if (riskPercent >= 30) {
+    return [
+      "Maintain a healthy diet with enough calcium and vitamin D.",
+      "Stay active, walking and light exercise help.",
+      "Avoid smoking and limit alcohol.",
+      "Talk to your doctor about your bone health at your next visit."
+    ];
+  } else {
+    return [
+      "Keep up your healthy habits!",
+      "Eat a balanced diet with calcium and vitamin D.",
+      "Stay active and avoid smoking.",
+      "Have regular checkups to monitor your bone health."
+    ];
+  }
+}
 
 export default function PatientView() {
   const { predictionData, loading } = usePrediction();
+  const { form } = usePatientForm();
 
   let riskPercent: number | null = null;
   let riskLabel = "";
@@ -36,55 +140,90 @@ export default function PatientView() {
     );
   }
 
+  // Patient-friendly summary
+  const patientSummary = (riskPercent !== null) ? getPatientSummary(riskPercent, riskLabel) : null;
+
+  // Patient-friendly insights
+  let insights: { icon: string; text: string }[] = [];
+  if (Array.isArray(predictionData?.contributing_factors) && predictionData.contributing_factors.length > 0) {
+    const sorted = [...predictionData.contributing_factors].sort((a, b) => Math.abs(b.shap) - Math.abs(a.shap));
+    insights = sorted.map((factor: { feature: string; shap: number }) => {
+      const value = form[factor.feature] || "";
+      return getPatientFactorSentence(factor.feature, value, factor.shap);
+    });
+  }
+
+  // Patient tips
+  const tips = (riskPercent !== null) ? getPatientTips(riskPercent) : [];
+
   return (
-    <div className="space-y-6 sm:space-y-8 w-full lg:max-w-3xl lg:mx-auto bg-white bg-opacity-95 rounded-xl sm:rounded-2xl lg:rounded-2xl shadow-lg sm:shadow-2xl lg:shadow-2xl p-4 sm:p-6 lg:p-4 lg:overflow-x-auto">
-      <h1 className="text-2xl sm:text-3xl lg:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 lg:mb-6 text-gray-900 leading-tight">
-        Patient View: Your Osteoporosis Risk
-      </h1>
+    <div className="space-y-6 sm:space-y-8 w-full lg:max-w-3xl lg:mx-auto bg-gradient-to-br from-blue-50 to-green-50 rounded-xl sm:rounded-2xl lg:rounded-2xl shadow-lg sm:shadow-2xl lg:shadow-2xl p-4 sm:p-6 lg:p-8 lg:overflow-x-auto">
+      {/* Hospital-style header */}
+      <div className="flex items-center gap-3 mb-2">
+        <FaRegHospital className="text-blue-500 text-3xl sm:text-4xl lg:text-4xl" />
+        <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-900">BoneHealth AI Patient Report</span>
+      </div>
       {riskPercent !== null && (
-        <div className="bg-blue-50 rounded-lg sm:rounded-xl lg:rounded-xl p-4 sm:p-6 lg:p-4 lg:p-6 lg:p-8 flex flex-col items-center shadow mb-4 w-full">
-          <div className="text-base sm:text-lg lg:text-lg font-semibold text-blue-800 mb-2 text-center">Understand Your Estimated Risk</div>
-          <div className={`text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-2 ${riskColor}`}>{riskPercent}%</div>
-          <div className={`text-lg sm:text-xl lg:text-xl font-bold mb-4 ${riskColor}`}>{riskLabel}</div>
-          <div className="w-full max-w-xs sm:max-w-md lg:max-w-lg h-3 bg-gray-200 rounded-full overflow-hidden mb-2">
+        <div className="bg-white rounded-xl border-l-8 shadow p-4 mb-4 flex items-center gap-3 border-blue-400">
+          <FaUserMd className="text-blue-500 text-2xl sm:text-3xl" />
+          <span className="text-lg sm:text-xl font-semibold text-blue-900">Doctor's Note: This report is generated by AI and reviewed by our clinical team.</span>
+        </div>
+      )}
+      {riskPercent !== null && patientSummary && (
+        <div className={`w-full border-l-4 rounded-lg p-3 mb-4 font-semibold flex items-center gap-2 ${patientSummary.color}`}> 
+          {patientSummary.icon}
+          <span>{patientSummary.text}</span>
+        </div>
+      )}
+      {riskPercent !== null && (
+        <div className="bg-white rounded-xl shadow border border-gray-200 p-4 sm:p-6 mb-4 flex flex-col items-center">
+          <div className="text-base sm:text-lg font-semibold text-blue-800 mb-2 text-center">Your Estimated Osteoporosis Risk</div>
+          <div className={`text-5xl font-extrabold mb-2 ${riskColor}`}>{riskPercent}%</div>
+          <div className={`text-lg font-bold mb-4 ${riskColor}`}>{riskLabel}</div>
+          <div className="w-full max-w-xs sm:max-w-md h-3 bg-gray-200 rounded-full overflow-hidden mb-2">
             <div className={`${barColor} h-3 rounded-full`} style={{ width: `${riskPercent}%` }} />
           </div>
         </div>
       )}
       {riskPercent !== null && (
-        <div className="bg-white rounded-lg sm:rounded-xl lg:rounded-xl border border-gray-200 p-4 sm:p-6 lg:p-4 lg:p-6 shadow w-full">
-          <h2 className="text-base sm:text-lg lg:text-lg font-bold mb-2 sm:mb-3 lg:mb-2 text-gray-900">What Does This Mean For You?</h2>
-          <p className="mb-4 text-gray-800 text-sm sm:text-base lg:text-base">
-            Based on your information, our model estimates your likelihood of having osteoporosis. A score of <span className="font-bold">{riskPercent}%</span> means there's an estimated {riskPercent}% chance you might have osteoporosis. This is an estimate to help you and your doctor. It's not a diagnosis.
-          </p>
-          <div>
-            <div className="font-semibold mb-1 text-gray-900 text-sm sm:text-base lg:text-base">Key Factors Contributing to Your Risk</div>
-            <ul className="list-disc pl-4 sm:pl-5 lg:pl-5 text-gray-800 space-y-1 text-sm sm:text-base lg:text-base">
-              {Array.isArray(predictionData?.contributing_factors) && predictionData.contributing_factors.length > 0 ? (
-                predictionData.contributing_factors.map((factor: { feature: string; shap: number }, idx: number) => (
-                  <li key={idx}>
-                    {factor.feature}: {factor.shap > 0 ? 'Increases' : 'Decreases'} risk (SHAP value: {factor.shap.toFixed(3)})
-                  </li>
-                ))
-              ) : (
-                <li>No specific contributing factors identified for this prediction.</li>
-              )}
-            </ul>
-          </div>
+        <div className="bg-white rounded-xl shadow border border-blue-100 p-4 sm:p-6 mb-4">
+          <h2 className="text-lg font-bold mb-2 text-blue-900 flex items-center gap-2">🦴 Key Factors for You</h2>
+          <ul className="space-y-2">
+            {insights.length > 0 ? (
+              insights.map((item, idx) => (
+                <li key={idx} className="flex items-center gap-2 text-gray-800 text-base">
+                  <span className="text-xl">{item.icon}</span>
+                  <span>{item.text}</span>
+                </li>
+              ))
+            ) : (
+              <li>No specific contributing factors identified for this prediction.</li>
+            )}
+          </ul>
+        </div>
+      )}
+      {riskPercent !== null && tips.length > 0 && (
+        <div className="bg-green-50 rounded-xl shadow border border-green-200 p-4 sm:p-6 mb-4">
+          <h2 className="text-lg font-bold mb-2 text-green-900 flex items-center gap-2">💡 What You Can Do</h2>
+          <ul className="list-disc pl-5 space-y-1 text-green-900 text-base">
+            {tips.map((tip, idx) => (
+              <li key={idx}>{tip}</li>
+            ))}
+          </ul>
         </div>
       )}
       {riskPercent !== null && (
-        <div className="bg-red-50 border border-red-200 rounded-lg sm:rounded-xl lg:rounded-xl p-4 sm:p-6 lg:p-4 lg:p-6 shadow w-full">
-          <div className="font-bold text-base sm:text-lg lg:text-lg text-red-700 mb-2">Important Disclaimer</div>
-          <div className="mb-2 text-red-700 font-semibold text-sm sm:text-base lg:text-base">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 sm:p-6 shadow w-full">
+          <div className="font-bold text-lg text-red-700 mb-2 flex items-center gap-2"><FaExclamationTriangle className="inline text-red-400" /> Important Disclaimer</div>
+          <div className="mb-2 text-red-700 font-semibold text-base">
             This tool provides an estimated risk only and is not a substitute for professional medical advice, diagnosis, or treatment.
           </div>
-          <div className="mb-4 text-gray-800 text-sm sm:text-base lg:text-base">
+          <div className="mb-4 text-gray-800 text-base">
             Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
           </div>
-          <div className="font-bold text-red-700 mb-1 text-sm sm:text-base lg:text-base">Next Steps</div>
-          <div className="text-gray-800 text-sm sm:text-base lg:text-base">
-            We recommend discussing these results with your healthcare provider. They can determine if further tests, such as a bone density scan, are appropriate for you.
+          <div className="font-bold text-red-700 mb-1 text-base">Next Steps</div>
+          <div className="text-gray-800 text-base">
+            We recommend discussing these results with your healthcare provider. They can help you decide if further tests, like a bone density scan, are right for you, and support you in keeping your bones healthy.
           </div>
         </div>
       )}
