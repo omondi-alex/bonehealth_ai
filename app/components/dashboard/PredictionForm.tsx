@@ -61,9 +61,8 @@ fieldMeta.forEach(section => {
 
 export default function PredictionForm() {
   const { form, setForm } = usePatientForm();
-  const [loading, setLoading] = useState(false);
+  const { setPredictionData, loading, setLoading } = usePrediction();
   const [error, setError] = useState("");
-  const { setPredictionData } = usePrediction();
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -78,6 +77,8 @@ export default function PredictionForm() {
       if (!res.ok) throw new Error("Prediction failed");
       const data = await res.json();
       setPredictionData(data);
+      // Add a short delay for loader effect
+      await new Promise((resolve) => setTimeout(resolve, 1200));
     } catch (err: any) {
       setError(err.message || "Prediction failed");
     } finally {
@@ -88,6 +89,15 @@ export default function PredictionForm() {
   function handleChange(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
     setPredictionData(null); // Clear result on any input change
+  }
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[40vh]">
+        <span className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-600 mb-6"></span>
+        <div className="text-green-700 text-lg font-semibold">Analyzing patient data and generating prediction...</div>
+      </div>
+    );
   }
 
   return (

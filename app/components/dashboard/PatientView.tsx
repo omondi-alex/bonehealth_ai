@@ -1,10 +1,8 @@
 import { usePrediction } from "./PredictionContext";
-import { useState } from "react";
 import { FaStethoscope } from "react-icons/fa";
 
 export default function PatientView() {
-  const { predictionData } = usePrediction();
-  const [loading, setLoading] = useState(false);
+  const { predictionData, loading } = usePrediction();
 
   let riskPercent: number | null = null;
   let riskLabel = "";
