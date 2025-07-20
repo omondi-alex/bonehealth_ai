@@ -50,6 +50,7 @@ const osteoporosisFacts = [
 export default function Home() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showRedirectLoader, setShowRedirectLoader] = useState(false);
 
   useEffect(() => {
     // Always log out when visiting the home page
@@ -64,6 +65,8 @@ export default function Home() {
     if (success) {
       setIsLoggedIn(true);
       setShowLoginModal(false);
+      // Show redirect loader immediately
+      setShowRedirectLoader(true);
       // Redirect to existing dashboard after successful login
       setTimeout(() => {
         window.location.href = '/dashboard';
@@ -78,6 +81,19 @@ export default function Home() {
       setShowLoginModal(true);
     }
   };
+
+  // Show full-screen redirect loader
+  if (showRedirectLoader) {
+    return (
+      <div className="fixed inset-0 bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center z-50">
+        <div className="text-center text-white">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-6"></div>
+          <h2 className="text-2xl font-bold mb-2">Welcome to BoneHealth AI</h2>
+          <p className="text-blue-100">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

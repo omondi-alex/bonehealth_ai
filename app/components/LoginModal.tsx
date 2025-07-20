@@ -15,6 +15,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showRedirectLoader, setShowRedirectLoader] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +35,9 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
       // Dispatch custom event to notify other components (like Navbar)
       window.dispatchEvent(new Event('localStorageChange'));
       
+      // Show redirect loader immediately
+      setShowRedirectLoader(true);
+      
       // Redirect to existing dashboard after successful login
       setTimeout(() => {
         window.location.href = '/dashboard';
@@ -52,6 +56,19 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
     setShowPassword(false);
     onClose();
   };
+
+  // Show full-screen redirect loader
+  if (showRedirectLoader) {
+    return (
+      <div className="fixed inset-0 bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center z-50">
+        <div className="text-center text-white">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-6"></div>
+          <h2 className="text-2xl font-bold mb-2">Welcome to BoneHealth AI</h2>
+          <p className="text-blue-100">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isOpen) return null;
 
