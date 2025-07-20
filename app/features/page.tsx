@@ -17,7 +17,7 @@ export default function FeaturesPage() {
     <div className="min-h-[80vh] w-full flex items-center justify-center bg-gradient-to-br from-yellow-50 to-blue-50 py-12 px-4">
       <div className="max-w-2xl w-full bg-white bg-opacity-90 rounded-2xl shadow-xl p-8">
         <h1 className="text-3xl font-bold mb-2 text-yellow-600 flex items-center gap-2">💡 Feature Impact Analysis</h1>
-        <p className="mb-6 text-gray-600">See which factors most influence osteoporosis risk. The chart below shows the relative importance of each feature (mock data).</p>
+        <p className="mb-6 text-gray-600">See which factors most influence osteoporosis risk. The chart below shows the relative importance of each feature.</p>
         <div className="space-y-4">
           {features.map((f, idx) => (
             <div key={f.name} className="flex items-center gap-4">

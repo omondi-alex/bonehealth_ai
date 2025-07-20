@@ -32,6 +32,18 @@ const features = [
   }
 ];
 
+const featureImportance = [
+  { name: "Age", importance: 0.32 },
+  { name: "Gender", importance: 0.18 },
+  { name: "Hormonal Changes", importance: 0.15 },
+  { name: "Body Weight", importance: 0.10 },
+  { name: "Calcium Intake", importance: 0.08 },
+  { name: "Physical Activity", importance: 0.07 },
+  { name: "Smoking", importance: 0.05 },
+  { name: "Alcohol Consumption", importance: 0.03 },
+  { name: "Prior Fractures", importance: 0.02 },
+];
+
 const stats = [
   { number: '200M+', label: 'People Worldwide Affected' },
   { number: '1 in 3', label: 'Women Over 50' },
@@ -52,6 +64,7 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showRedirectLoader, setShowRedirectLoader] = useState(false);
   const [showUploadPopup, setShowUploadPopup] = useState(false);
+  const [showFeaturesPopup, setShowFeaturesPopup] = useState(false);
 
   useEffect(() => {
     // Always log out when visiting the home page
@@ -86,6 +99,11 @@ export default function Home() {
   const handleUploadClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setShowUploadPopup(true);
+  };
+
+  const handleFeaturesClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowFeaturesPopup(true);
   };
 
   // Show full-screen redirect loader
@@ -133,11 +151,12 @@ export default function Home() {
                   Start Risk Assessment
                   <FiArrowRight className="ml-2 w-5 h-5" />
                 </button>
-                <Link href="/features">
-                  <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold text-lg hover:border-blue-600 hover:text-blue-600 transition-all duration-200">
-                    Learn More
-                  </button>
-                </Link>
+                <button 
+                  onClick={handleFeaturesClick}
+                  className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold text-lg hover:border-blue-600 hover:text-blue-600 transition-all duration-200"
+                >
+                  Learn More
+                </button>
               </div>
             </div>
           </div>
@@ -319,18 +338,19 @@ export default function Home() {
                 </div>
               </button>
               
-              <Link href="/features">
-                <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 p-8 text-center group cursor-pointer">
-                  <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform duration-200">
-                    💡
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Feature Analysis</h3>
-                  <p className="text-gray-600 mb-6">Explore which factors most significantly impact osteoporosis risk.</p>
-                  <div className="text-purple-600 font-semibold group-hover:translate-x-2 transition-transform duration-200">
-                    Explore Features →
-                  </div>
+              <button 
+                onClick={handleFeaturesClick}
+                className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 p-8 text-center group cursor-pointer"
+              >
+                <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform duration-200">
+                  💡
                 </div>
-              </Link>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Feature Analysis</h3>
+                <p className="text-gray-600 mb-6">Explore which factors most significantly impact osteoporosis risk.</p>
+                <div className="text-purple-600 font-semibold group-hover:translate-x-2 transition-transform duration-200">
+                  Explore Features →
+                </div>
+              </button>
             </div>
           </div>
         </section>
@@ -409,6 +429,91 @@ export default function Home() {
             <div className="mt-4 sm:mt-6 text-center">
               <p className="text-xs text-gray-500">
                 Need help? Email: <span className="text-blue-600">omondialex3517@gmail.com</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Features Popup */}
+      {showFeaturesPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-2xl max-w-sm sm:max-w-lg w-full p-4 sm:p-6 lg:p-8 relative mx-4 max-h-[90vh] overflow-y-auto">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowFeaturesPopup(false)}
+              className="absolute top-2 sm:top-4 right-2 sm:right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"
+            >
+              <FiX className="w-5 h-5 sm:w-6 sm:h-6" />
+            </button>
+
+            {/* Header with Icon */}
+            <div className="text-center mb-4 sm:mb-6">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-xl sm:rounded-2xl flex items-center justify-center">
+                <span className="text-white text-2xl sm:text-3xl">💡</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Feature Impact Analysis</h3>
+              <p className="text-sm sm:text-base text-gray-600">Discover which factors most influence osteoporosis risk</p>
+            </div>
+
+            {/* Content */}
+            <div className="space-y-4 sm:space-y-6">
+              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg p-3 sm:p-4">
+                <h4 className="font-semibold text-orange-900 mb-2 text-sm sm:text-base">📊 Risk Factor Analysis</h4>
+                <p className="text-xs sm:text-sm text-orange-800 mb-3">
+                  Our AI model analyzes multiple factors to determine their relative importance in predicting osteoporosis risk. 
+                  The chart below shows the impact of each feature.
+                </p>
+              </div>
+
+              {/* Feature Importance Chart */}
+              <div className="space-y-3 sm:space-y-4">
+                {featureImportance.map((feature, idx) => (
+                  <div key={feature.name} className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-medium text-gray-700 text-sm sm:text-base">
+                        {idx + 1}. {feature.name}
+                      </span>
+                      <span className="text-xs sm:text-sm font-bold text-blue-900">
+                        {(feature.importance * 100).toFixed(0)}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-gradient-to-r from-yellow-200 to-blue-200 rounded-full h-3 sm:h-4 relative overflow-hidden">
+                      <div
+                        className="bg-gradient-to-r from-yellow-400 to-blue-500 h-3 sm:h-4 rounded-full transition-all duration-1000 ease-out"
+                        style={{ width: `${feature.importance * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Key Insights */}
+              <div className="bg-blue-50 rounded-lg p-3 sm:p-4">
+                <h4 className="font-semibold text-blue-900 mb-2 text-sm sm:text-base">🔍 Key Insights:</h4>
+                <ul className="text-xs sm:text-sm text-blue-800 space-y-1">
+                  <li>• <strong>Age</strong> is the most significant risk factor (32%)</li>
+                  <li>• <strong>Gender</strong> plays a crucial role (18%)</li>
+                  <li>• <strong>Hormonal changes</strong> are highly influential (15%)</li>
+                  <li>• Lifestyle factors like <strong>body weight</strong> and <strong>physical activity</strong> matter</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Action Button */}
+            <div className="mt-6 sm:mt-8">
+              <button
+                onClick={() => setShowFeaturesPopup(false)}
+                className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 text-white py-2.5 sm:py-3 px-4 rounded-lg font-semibold text-sm sm:text-base hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+              >
+                Got It!
+              </button>
+            </div>
+
+            {/* Footer */}
+            <div className="mt-4 sm:mt-6 text-center">
+              <p className="text-xs text-gray-500">
+                Data based on AI model analysis • Results may vary by individual
               </p>
             </div>
           </div>

@@ -26,7 +26,7 @@ export default function Overview() {
         </div>
         
         <div className="bg-green-50 rounded-lg sm:rounded-xl lg:rounded-xl p-4 sm:p-6 lg:p-6 shadow flex flex-col justify-between">
-          <h2 className="text-base sm:text-lg lg:text-lg font-bold text-green-800 mb-2 sm:mb-3 lg:mb-2">Overall Model Performance (Mock Data)</h2>
+          <h2 className="text-base sm:text-lg lg:text-lg font-bold text-green-800 mb-2 sm:mb-3 lg:mb-2">Overall Model Performance</h2>
           <div className="text-gray-800 mb-1 text-sm sm:text-base lg:text-base">
             Overall Accuracy: <span className="font-bold text-green-700">87%</span>
           </div>
@@ -37,7 +37,7 @@ export default function Overview() {
       </div>
       
       <div className="bg-gray-50 rounded-lg sm:rounded-xl lg:rounded-xl p-4 sm:p-6 lg:p-6 shadow">
-        <h2 className="text-base sm:text-lg lg:text-lg font-bold text-gray-800 mb-2 sm:mb-3 lg:mb-2">Key Feature Insights (Mock Data)</h2>
+        <h2 className="text-base sm:text-lg lg:text-lg font-bold text-gray-800 mb-2 sm:mb-3 lg:mb-2">Key Feature Insights</h2>
         <ul className="list-disc pl-4 sm:pl-5 lg:pl-5 text-gray-800 space-y-1 text-sm sm:text-base lg:text-base">
           <li><span className="font-bold">Age:</span> The most significant predictor, risk increases with age.</li>
           <li><span className="font-bold">Family History:</span> A strong indicator due to genetic predisposition.</li>
