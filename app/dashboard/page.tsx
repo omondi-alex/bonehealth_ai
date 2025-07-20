@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Overview from "../components/dashboard/Overview";
 import ClinicalInsights from "../components/dashboard/ClinicalInsights";
 import DataScienceView from "../components/dashboard/DataScienceView";
@@ -35,40 +35,80 @@ const initialForm: Record<string, string> = {
   "Prior Fractures": "",
 };
 
-function ClinicalInsightsModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+function ClinicalInsightsModal({ open, onClose, onPatientReport }: { open: boolean; onClose: () => void; onPatientReport: () => void }) {
   if (!open) return null;
   return (
     <div className="fixed inset-0 bg-black bg-opacity-20 backdrop-blur-md flex items-center justify-center z-50 p-2 sm:p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-4 sm:p-8 relative mx-4 overflow-y-auto max-h-[90vh]">
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors z-10"
-          aria-label="Close"
-        >
-          <span className="text-2xl">×</span>
-        </button>
-        <ClinicalInsights />
+      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full relative mx-4 max-h-[90vh] flex flex-col">
+        {/* Modal Header with Close Button */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 sticky top-0 bg-white rounded-t-2xl z-20">
+          <h2 className="text-lg sm:text-xl font-bold text-blue-900">Clinical Insights</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 transition-colors p-2"
+            aria-label="Close"
+          >
+            <span className="text-2xl">×</span>
+          </button>
+        </div>
+        {/* Modal Content */}
+        <div className="overflow-y-auto flex-1 p-4 sm:p-8">
+          <ClinicalInsights />
+          <div className="flex justify-center mt-8 mb-2">
+            <button
+              type="button"
+              onClick={onPatientReport}
+              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold shadow hover:bg-blue-700 transition text-base sm:text-lg"
+            >
+              Patient Report
+            </button>
+          </div>
+        </div>
       </div>
     </div>
+  );
+}
+
+function ClinicalInsightsModalTrigger({ open, setOpen, goToPatientView, activeTab }: { open: boolean; setOpen: (v: boolean) => void; goToPatientView: () => void; activeTab: number }) {
+  const { predictionData, loading } = usePrediction();
+  const lastPredictionId = useRef<string | null>(null);
+  const [shouldShowPopup, setShouldShowPopup] = useState(false);
+
+  // Generate a unique id for the prediction
+  const predictionId = predictionData ? JSON.stringify(predictionData) : null;
+
+  // Only set shouldShowPopup to true if a new prediction is made while on Clinical Insights tab
+  useEffect(() => {
+    if (!loading && predictionData && predictionId !== lastPredictionId.current) {
+      if (activeTab === 1) {
+        setOpen(true);
+        setShouldShowPopup(true);
+        lastPredictionId.current = predictionId;
+      }
+    }
+    // If user navigates away from Clinical Insights, close the popup and reset shouldShowPopup
+    if (activeTab !== 1) {
+      setOpen(false);
+      setShouldShowPopup(false);
+    }
+  }, [predictionData, loading, activeTab, predictionId, setOpen]);
+
+  // Only show the modal if shouldShowPopup is true and tab is active
+  return (
+    <ClinicalInsightsModal open={open && shouldShowPopup && activeTab === 1} onClose={() => { setOpen(false); setShouldShowPopup(false); }} onPatientReport={goToPatientView} />
   );
 }
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState(0);
   const [showInsightsModal, setShowInsightsModal] = useState(false);
-  // Only usePrediction inside the provider
-  function ClinicalInsightsModalTrigger() {
-    const { predictionData, loading } = usePrediction();
-    useEffect(() => {
-      if (!loading && predictionData && activeTab === 1) {
-        setShowInsightsModal(true);
-      }
-    }, [predictionData, loading, activeTab]);
-    return (
-      <ClinicalInsightsModal open={showInsightsModal} onClose={() => setShowInsightsModal(false)} />
-    );
-  }
+
+  // Handler to go to Patient View and close modal
+  const goToPatientView = () => {
+    setShowInsightsModal(false);
+    setActiveTab(3); // Patient View tab index
+  };
 
   return (
     <ProtectedRoute>
@@ -77,7 +117,9 @@ export default function Dashboard() {
           <DashboardLayout activeTab={activeTab} setActiveTab={setActiveTab}>
             <div className="p-2 sm:p-4 lg:p-8 lg:max-w-5xl lg:mx-auto w-full">
               {activeTab === 1 && <PredictionForm />}
-              {activeTab === 1 && <ClinicalInsightsModalTrigger />}
+              {activeTab === 1 && (
+                <ClinicalInsightsModalTrigger open={showInsightsModal} setOpen={setShowInsightsModal} goToPatientView={goToPatientView} activeTab={activeTab} />
+              )}
               <div className="w-full lg:bg-white lg:rounded-xl lg:shadow lg:p-6 lg:mt-6">{tabs[activeTab].component}</div>
             </div>
           </DashboardLayout>
