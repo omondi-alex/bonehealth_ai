@@ -33,7 +33,6 @@ export default function Overview() {
           <div className="text-gray-800 mb-2 text-sm sm:text-base lg:text-base">
             Area Under ROC Curve (AUC): <span className="font-bold text-green-700">0.89</span>
           </div>
-          <div className="text-xs text-gray-500">*These are illustrative values for demonstration purposes.</div>
         </div>
       </div>
       
@@ -45,7 +44,6 @@ export default function Overview() {
           <li><span className="font-bold">Vitamin D Intake:</span> Lower intake correlates with higher risk.</li>
           <li><span className="font-bold">Prior Fractures:</span> Previous fractures are a strong predictor of future risk.</li>
         </ul>
-        <div className="text-xs text-gray-500 mt-2">*Based on mock feature importance analysis.</div>
       </div>
     </div>
   );
