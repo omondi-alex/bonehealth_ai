@@ -438,7 +438,7 @@ export default function Home() {
       {/* Features Popup */}
       {showFeaturesPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-2xl max-w-sm sm:max-w-lg w-full p-4 sm:p-6 lg:p-8 relative mx-4 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-2xl max-w-sm sm:max-w-lg lg:max-w-3xl w-full p-4 sm:p-6 lg:p-12 relative mx-4 max-h-[90vh] overflow-y-auto">
             {/* Close Button */}
             <button
               onClick={() => setShowFeaturesPopup(false)}
@@ -452,35 +452,35 @@ export default function Home() {
               <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-xl sm:rounded-2xl flex items-center justify-center">
                 <span className="text-white text-2xl sm:text-3xl">💡</span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Feature Impact Analysis</h3>
-              <p className="text-sm sm:text-base text-gray-600">Discover which factors most influence osteoporosis risk</p>
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Feature Impact Analysis</h3>
+              <p className="text-sm sm:text-base lg:text-lg text-gray-600">Discover which factors most influence osteoporosis risk</p>
             </div>
 
             {/* Content */}
-            <div className="space-y-4 sm:space-y-6">
-              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg p-3 sm:p-4">
-                <h4 className="font-semibold text-orange-900 mb-2 text-sm sm:text-base">📊 Risk Factor Analysis</h4>
-                <p className="text-xs sm:text-sm text-orange-800 mb-3">
+            <div className="space-y-4 sm:space-y-6 lg:space-y-8">
+              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg p-3 sm:p-4 lg:p-6">
+                <h4 className="font-semibold text-orange-900 mb-2 text-sm sm:text-base lg:text-lg">📊 Risk Factor Analysis</h4>
+                <p className="text-xs sm:text-sm lg:text-base text-orange-800 mb-3">
                   Our AI model analyzes multiple factors to determine their relative importance in predicting osteoporosis risk. 
                   The chart below shows the impact of each feature.
                 </p>
               </div>
 
               {/* Feature Importance Chart */}
-              <div className="space-y-3 sm:space-y-4">
+              <div className="space-y-3 sm:space-y-4 lg:space-y-6">
                 {featureImportance.map((feature, idx) => (
-                  <div key={feature.name} className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-medium text-gray-700 text-sm sm:text-base">
+                  <div key={feature.name} className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 lg:p-6">
+                    <div className="flex items-center justify-between mb-2 lg:mb-3">
+                      <span className="font-medium text-gray-700 text-sm sm:text-base lg:text-lg">
                         {idx + 1}. {feature.name}
                       </span>
-                      <span className="text-xs sm:text-sm font-bold text-blue-900">
+                      <span className="text-xs sm:text-sm lg:text-base font-bold text-blue-900">
                         {(feature.importance * 100).toFixed(0)}%
                       </span>
                     </div>
-                    <div className="w-full bg-gradient-to-r from-yellow-200 to-blue-200 rounded-full h-3 sm:h-4 relative overflow-hidden">
+                    <div className="w-full bg-gradient-to-r from-yellow-200 to-blue-200 rounded-full h-3 sm:h-4 lg:h-6 relative overflow-hidden">
                       <div
-                        className="bg-gradient-to-r from-yellow-400 to-blue-500 h-3 sm:h-4 rounded-full transition-all duration-1000 ease-out"
+                        className="bg-gradient-to-r from-yellow-400 to-blue-500 h-3 sm:h-4 lg:h-6 rounded-full transition-all duration-1000 ease-out"
                         style={{ width: `${feature.importance * 100}%` }}
                       ></div>
                     </div>
@@ -489,9 +489,9 @@ export default function Home() {
               </div>
 
               {/* Key Insights */}
-              <div className="bg-blue-50 rounded-lg p-3 sm:p-4">
-                <h4 className="font-semibold text-blue-900 mb-2 text-sm sm:text-base">🔍 Key Insights:</h4>
-                <ul className="text-xs sm:text-sm text-blue-800 space-y-1">
+              <div className="bg-blue-50 rounded-lg p-3 sm:p-4 lg:p-6">
+                <h4 className="font-semibold text-blue-900 mb-2 text-sm sm:text-base lg:text-lg">🔍 Key Insights:</h4>
+                <ul className="text-xs sm:text-sm lg:text-base text-blue-800 space-y-1 lg:space-y-2">
                   <li>• <strong>Age</strong> is the most significant risk factor (32%)</li>
                   <li>• <strong>Gender</strong> plays a crucial role (18%)</li>
                   <li>• <strong>Hormonal changes</strong> are highly influential (15%)</li>
@@ -501,18 +501,18 @@ export default function Home() {
             </div>
 
             {/* Action Button */}
-            <div className="mt-6 sm:mt-8">
+            <div className="mt-6 sm:mt-8 lg:mt-10">
               <button
                 onClick={() => setShowFeaturesPopup(false)}
-                className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 text-white py-2.5 sm:py-3 px-4 rounded-lg font-semibold text-sm sm:text-base hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+                className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 text-white py-2.5 sm:py-3 lg:py-4 px-4 rounded-lg font-semibold text-sm sm:text-base lg:text-lg hover:shadow-lg transform hover:scale-105 transition-all duration-200"
               >
                 Got It!
               </button>
             </div>
 
             {/* Footer */}
-            <div className="mt-4 sm:mt-6 text-center">
-              <p className="text-xs text-gray-500">
+            <div className="mt-4 sm:mt-6 lg:mt-8 text-center">
+              <p className="text-xs sm:text-sm lg:text-base text-gray-500">
                 Data based on AI model analysis • Results may vary by individual
               </p>
             </div>
