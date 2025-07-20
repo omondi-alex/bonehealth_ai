@@ -101,14 +101,14 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FiUser className="h-5 w-5 text-gray-400" />
+                <FiUser className="h-5 w-5 text-gray-500" />
               </div>
               <input
                 id="username"
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="block w-full pl-10 pr-3 py-3 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
                 placeholder="Enter your username"
                 required
               />
@@ -122,14 +122,14 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FiLock className="h-5 w-5 text-gray-400" />
+                <FiLock className="h-5 w-5 text-gray-500" />
               </div>
               <input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="block w-full pl-10 pr-12 py-3 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
                 placeholder="Enter your password"
                 required
               />
@@ -139,9 +139,9 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
                 className="absolute inset-y-0 right-0 pr-3 flex items-center"
               >
                 {showPassword ? (
-                  <FiEyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  <FiEyeOff className="h-5 w-5 text-gray-500 hover:text-gray-700" />
                 ) : (
-                  <FiEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  <FiEye className="h-5 w-5 text-gray-500 hover:text-gray-700" />
                 )}
               </button>
             </div>
