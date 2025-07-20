@@ -68,63 +68,69 @@ export default function DataScienceView() {
   }, []);
 
   return (
-    <div className="space-y-8 max-w-5xl mx-auto bg-white bg-opacity-95 rounded-2xl shadow-2xl p-10">
-      <h1 className="text-3xl font-bold mb-2 text-gray-900">Data Scientist View: Detailed Model Insights</h1>
-      <p className="mb-8 text-gray-700">This section provides detailed performance metrics and model interpretability plots for data scientists.</p>
+    <div className="space-y-6 sm:space-y-8 w-full lg:max-w-5xl lg:mx-auto bg-white bg-opacity-95 rounded-xl sm:rounded-2xl lg:rounded-2xl shadow-lg sm:shadow-2xl lg:shadow-2xl p-4 sm:p-6 lg:p-10">
+      <h1 className="text-2xl sm:text-3xl lg:text-3xl font-bold mb-2 sm:mb-4 lg:mb-2 text-gray-900 leading-tight">
+        Data Scientist View: Detailed Model Insights
+      </h1>
+      <p className="mb-6 sm:mb-8 lg:mb-8 text-gray-700 text-sm sm:text-base lg:text-base">
+        This section provides detailed performance metrics and model interpretability plots for data scientists.
+      </p>
       {loading ? (
         <div className="text-center text-purple-700">Loading...</div>
       ) : error ? (
         <div className="text-center text-red-600">{error}</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
           {/* Cross-validation Metrics */}
-          <div className="bg-purple-50 rounded-xl p-6 shadow flex flex-col items-center">
-            <h2 className="text-lg font-bold text-purple-700 mb-4 text-center">Cross-validation Metrics</h2>
-            <table className="min-w-[220px] text-sm bg-white rounded shadow border border-gray-200 mb-2">
-              <thead>
-                <tr className="bg-purple-100">
-                  <th className="px-3 py-2 font-semibold text-gray-700">METRIC</th>
-                  <th className="px-3 py-2 font-semibold text-gray-700">MEAN</th>
-                  <th className="px-3 py-2 font-semibold text-gray-700">STD DEV</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="px-3 py-2">Accuracy</td>
-                  <td className="px-3 py-2">{metrics?.accuracy.mean.toFixed(2)}</td>
-                  <td className="px-3 py-2">{metrics?.accuracy.std.toFixed(3)}</td>
-                </tr>
-                <tr>
-                  <td className="px-3 py-2">F1-Score</td>
-                  <td className="px-3 py-2">{metrics?.f1.mean.toFixed(2)}</td>
-                  <td className="px-3 py-2">{metrics?.f1.std.toFixed(3)}</td>
-                </tr>
-                <tr>
-                  <td className="px-3 py-2">Recall</td>
-                  <td className="px-3 py-2">{metrics?.recall.mean.toFixed(2)}</td>
-                  <td className="px-3 py-2">{metrics?.recall.std.toFixed(3)}</td>
-                </tr>
-                {metrics?.precision && (
-                  <tr>
-                    <td className="px-3 py-2">Precision</td>
-                    <td className="px-3 py-2">{metrics.precision.mean.toFixed(2)}</td>
-                    <td className="px-3 py-2">{metrics.precision.std.toFixed(3)}</td>
+          <div className="bg-purple-50 rounded-lg sm:rounded-xl lg:rounded-xl p-4 sm:p-6 lg:p-6 shadow flex flex-col items-center">
+            <h2 className="text-base sm:text-lg lg:text-lg font-bold text-purple-700 mb-3 sm:mb-4 lg:mb-4 text-center">Cross-validation Metrics</h2>
+            <div className="w-full overflow-x-auto">
+              <table className="min-w-full text-xs sm:text-sm lg:text-sm bg-white rounded shadow border border-gray-200 mb-2">
+                <thead>
+                  <tr className="bg-purple-100">
+                    <th className="px-2 sm:px-3 lg:px-3 py-2 font-semibold text-gray-700">METRIC</th>
+                    <th className="px-2 sm:px-3 lg:px-3 py-2 font-semibold text-gray-700">MEAN</th>
+                    <th className="px-2 sm:px-3 lg:px-3 py-2 font-semibold text-gray-700">STD DEV</th>
                   </tr>
-                )}
-                {metrics?.roc_auc && (
+                </thead>
+                <tbody>
                   <tr>
-                    <td className="px-3 py-2">ROC AUC</td>
-                    <td className="px-3 py-2">{metrics.roc_auc.mean.toFixed(2)}</td>
-                    <td className="px-3 py-2">{metrics.roc_auc.std.toFixed(3)}</td>
+                    <td className="px-2 sm:px-3 lg:px-3 py-2">Accuracy</td>
+                    <td className="px-2 sm:px-3 lg:px-3 py-2">{metrics?.accuracy.mean.toFixed(2)}</td>
+                    <td className="px-2 sm:px-3 lg:px-3 py-2">{metrics?.accuracy.std.toFixed(3)}</td>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                  <tr>
+                    <td className="px-2 sm:px-3 lg:px-3 py-2">F1-Score</td>
+                    <td className="px-2 sm:px-3 lg:px-3 py-2">{metrics?.f1.mean.toFixed(2)}</td>
+                    <td className="px-2 sm:px-3 lg:px-3 py-2">{metrics?.f1.std.toFixed(3)}</td>
+                  </tr>
+                  <tr>
+                    <td className="px-2 sm:px-3 lg:px-3 py-2">Recall</td>
+                    <td className="px-2 sm:px-3 lg:px-3 py-2">{metrics?.recall.mean.toFixed(2)}</td>
+                    <td className="px-2 sm:px-3 lg:px-3 py-2">{metrics?.recall.std.toFixed(3)}</td>
+                  </tr>
+                  {metrics?.precision && (
+                    <tr>
+                      <td className="px-2 sm:px-3 lg:px-3 py-2">Precision</td>
+                      <td className="px-2 sm:px-3 lg:px-3 py-2">{metrics.precision.mean.toFixed(2)}</td>
+                      <td className="px-2 sm:px-3 lg:px-3 py-2">{metrics.precision.std.toFixed(3)}</td>
+                    </tr>
+                  )}
+                  {metrics?.roc_auc && (
+                    <tr>
+                      <td className="px-2 sm:px-3 lg:px-3 py-2">ROC AUC</td>
+                      <td className="px-2 sm:px-3 lg:px-3 py-2">{metrics.roc_auc.mean.toFixed(2)}</td>
+                      <td className="px-2 sm:px-3 lg:px-3 py-2">{metrics.roc_auc.std.toFixed(3)}</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
             <div className="text-xs text-gray-500 mt-2">*Real cross-validation results</div>
           </div>
           {/* Probability Distribution */}
-          <div className="bg-purple-50 rounded-xl p-6 shadow flex flex-col items-center">
-            <h2 className="text-lg font-bold text-purple-700 mb-4 text-center">Distribution of Predicted Probabilities</h2>
+          <div className="bg-purple-50 rounded-lg sm:rounded-xl lg:rounded-xl p-4 sm:p-6 lg:p-6 shadow flex flex-col items-center">
+            <h2 className="text-base sm:text-lg lg:text-lg font-bold text-purple-700 mb-3 sm:mb-4 lg:mb-4 text-center">Distribution of Predicted Probabilities</h2>
             {probDist && (
               <svg width="220" height="120" viewBox="0 0 220 120" className="mb-2">
                 {probDist.hist.map((h, i) => (
@@ -164,7 +170,7 @@ export default function DataScienceView() {
                     },
                   ]}
                   layout={{
-                    width: 320,
+                    width: Math.min(320, window.innerWidth - 40),
                     height: 200,
                     title: { text: "Predicted Probability Distribution (KDE)" },
                     xaxis: { title: { text: "Predicted Probability" } },
@@ -178,9 +184,10 @@ export default function DataScienceView() {
             )}
             <div className="text-xs text-gray-500">*Real probability distribution</div>
           </div>
+          
           {/* Risk Gauge for 1 Patient */}
-          <div className="bg-purple-50 rounded-xl p-6 shadow flex flex-col items-center">
-            <h2 className="text-lg font-bold text-purple-700 mb-4 text-center">Risk Gauge for 1 Patient</h2>
+          <div className="bg-purple-50 rounded-lg sm:rounded-xl lg:rounded-xl p-4 sm:p-6 lg:p-6 shadow flex flex-col items-center">
+            <h2 className="text-base sm:text-lg lg:text-lg font-bold text-purple-700 mb-3 sm:mb-4 lg:mb-4 text-center">Risk Gauge for 1 Patient</h2>
             {firstPatientRisk !== null && (
               <div className="w-full flex flex-col items-center">
                 <Plot
@@ -195,7 +202,7 @@ export default function DataScienceView() {
                     },
                   ]}
                   layout={{
-                    width: 320,
+                    width: Math.min(320, window.innerWidth - 40),
                     height: 100,
                     xaxis: { range: [0, 100], title: { text: "Risk (%)" } },
                     yaxis: { showticklabels: true },
@@ -208,9 +215,10 @@ export default function DataScienceView() {
             )}
             <div className="text-xs text-gray-500">*Predicted risk for the first patient in the dataset</div>
           </div>
+          
           {/* SHAP Summary Plot */}
-          <div className="bg-purple-50 rounded-xl p-6 shadow flex flex-col items-center">
-            <h2 className="text-lg font-bold text-purple-700 mb-4 text-center">SHAP Summary Plot</h2>
+          <div className="bg-purple-50 rounded-lg sm:rounded-xl lg:rounded-xl p-4 sm:p-6 lg:p-6 shadow flex flex-col items-center">
+            <h2 className="text-base sm:text-lg lg:text-lg font-bold text-purple-700 mb-3 sm:mb-4 lg:mb-4 text-center">SHAP Summary Plot</h2>
             <svg width="220" height="90" viewBox="0 0 220 90" className="mb-2">
               {featureImportance.map((f, i) => (
                 <rect
@@ -228,9 +236,10 @@ export default function DataScienceView() {
             </svg>
             <div className="text-xs text-gray-500">*Real SHAP values (positive = increases risk, negative = decreases risk)</div>
           </div>
+          
           {/* SHAP Dependence Plot */}
-          <div className="bg-purple-50 rounded-xl p-6 shadow flex flex-col items-center">
-            <h2 className="text-lg font-bold text-purple-700 mb-4 text-center">SHAP Dependence Plot (Age)</h2>
+          <div className="bg-purple-50 rounded-lg sm:rounded-xl lg:rounded-xl p-4 sm:p-6 lg:p-6 shadow flex flex-col items-center">
+            <h2 className="text-base sm:text-lg lg:text-lg font-bold text-purple-700 mb-3 sm:mb-4 lg:mb-4 text-center">SHAP Dependence Plot (Age)</h2>
             {shapDependence.length > 0 && (
               <svg width="220" height="90" viewBox="0 0 220 90" className="mb-2">
                 <polyline
@@ -246,9 +255,10 @@ export default function DataScienceView() {
             )}
             <div className="text-xs text-gray-500">*Real: How Age impacts SHAP value</div>
           </div>
+          
           {/* Partial Dependence Plot */}
-          <div className="bg-purple-50 rounded-xl p-6 shadow flex flex-col items-center md:col-span-2">
-            <h2 className="text-lg font-bold text-purple-700 mb-4 text-center">Partial Dependence Plot (Calcium Intake)</h2>
+          <div className="bg-purple-50 rounded-lg sm:rounded-xl lg:rounded-xl p-4 sm:p-6 lg:p-6 shadow flex flex-col items-center lg:col-span-2">
+            <h2 className="text-base sm:text-lg lg:text-lg font-bold text-purple-700 mb-3 sm:mb-4 lg:mb-4 text-center">Partial Dependence Plot (Calcium Intake)</h2>
             {partialDependence.length > 0 && (
               <svg width="400" height="90" viewBox="0 0 400 90" className="mb-2">
                 <polyline
@@ -268,9 +278,10 @@ export default function DataScienceView() {
             )}
             <div className="text-xs text-gray-500">*Real: Average effect of Calcium Intake on prediction</div>
           </div>
+          
           {/* SHAP Force Plot for 1 Patient */}
-          <div className="bg-purple-50 rounded-xl p-6 shadow flex flex-col items-center md:col-span-2">
-            <h2 className="text-lg font-bold text-purple-700 mb-4 text-center">SHAP Force Plot for 1 Patient</h2>
+          <div className="bg-purple-50 rounded-lg sm:rounded-xl lg:rounded-xl p-4 sm:p-6 lg:p-6 shadow flex flex-col items-center lg:col-span-2">
+            <h2 className="text-base sm:text-lg lg:text-lg font-bold text-purple-700 mb-3 sm:mb-4 lg:mb-4 text-center">SHAP Force Plot for 1 Patient</h2>
             {firstPatientShap.length > 0 && firstPatientFeatures.length > 0 && (
               <div className="w-full flex flex-col items-center">
                 <Plot
@@ -288,7 +299,7 @@ export default function DataScienceView() {
                     },
                   ]}
                   layout={{
-                    width: 400,
+                    width: Math.min(400, window.innerWidth - 40),
                     height: Math.max(120, 20 * firstPatientFeatures.length),
                     xaxis: { title: { text: "SHAP Value (impact on model output)" } },
                     yaxis: { automargin: true },

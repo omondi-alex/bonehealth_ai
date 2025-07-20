@@ -43,9 +43,9 @@ export default function Dashboard() {
       <PredictionProvider>
         <PatientFormProvider initialForm={initialForm}>
           <DashboardLayout activeTab={activeTab} setActiveTab={setActiveTab}>
-            <div className="p-8 max-w-5xl mx-auto w-full">
+            <div className="p-2 sm:p-4 lg:p-8 lg:max-w-5xl lg:mx-auto w-full">
               {activeTab === 1 && <PredictionForm />}
-              <div className="bg-white rounded-xl shadow p-6 mt-6">{tabs[activeTab].component}</div>
+              <div className="w-full lg:bg-white lg:rounded-xl lg:shadow lg:p-6 lg:mt-6">{tabs[activeTab].component}</div>
             </div>
           </DashboardLayout>
         </PatientFormProvider>
