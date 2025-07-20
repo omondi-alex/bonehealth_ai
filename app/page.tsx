@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { FiArrowRight, FiShield, FiCpu, FiTrendingUp, FiUsers, FiAward, FiZap } from 'react-icons/fi';
+import { FiArrowRight, FiShield, FiCpu, FiTrendingUp, FiUsers, FiAward, FiZap, FiX } from 'react-icons/fi';
 import LoginModal from './components/LoginModal';
 
 const features = [
@@ -51,6 +51,7 @@ export default function Home() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showRedirectLoader, setShowRedirectLoader] = useState(false);
+  const [showUploadPopup, setShowUploadPopup] = useState(false);
 
   useEffect(() => {
     // Always log out when visiting the home page
@@ -80,6 +81,11 @@ export default function Home() {
     } else {
       setShowLoginModal(true);
     }
+  };
+
+  const handleUploadClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowUploadPopup(true);
   };
 
   // Show full-screen redirect loader
@@ -262,11 +268,12 @@ export default function Home() {
                 <FiAward className="w-5 h-5 mr-2" />
                 Start Your Assessment
               </button>
-              <Link href="/upload">
-                <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all duration-200">
-                  Upload Data
-                </button>
-              </Link>
+              <button 
+                onClick={handleUploadClick}
+                className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-gray-900 transition-all duration-200"
+              >
+                Upload Data
+              </button>
             </div>
           </div>
         </section>
@@ -298,18 +305,19 @@ export default function Home() {
                 </div>
               </button>
               
-              <Link href="/upload">
-                <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 p-8 text-center group cursor-pointer">
-                  <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform duration-200">
-                    📊
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Data Analysis</h3>
-                  <p className="text-gray-600 mb-6">Upload and analyze osteoporosis datasets for comprehensive insights.</p>
-                  <div className="text-green-600 font-semibold group-hover:translate-x-2 transition-transform duration-200">
-                    Upload Data →
-                  </div>
+              <button 
+                onClick={handleUploadClick}
+                className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 p-8 text-center group cursor-pointer w-full"
+              >
+                <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform duration-200">
+                  📊
                 </div>
-              </Link>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Data Analysis</h3>
+                <p className="text-gray-600 mb-6">Upload and analyze osteoporosis datasets for comprehensive insights.</p>
+                <div className="text-green-600 font-semibold group-hover:translate-x-2 transition-transform duration-200">
+                  Upload Data →
+                </div>
+              </button>
               
               <Link href="/features">
                 <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 p-8 text-center group cursor-pointer">
@@ -334,6 +342,78 @@ export default function Home() {
         onClose={() => setShowLoginModal(false)}
         onLogin={handleLogin}
       />
+
+      {/* Upload Data Popup */}
+      {showUploadPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-2xl max-w-sm sm:max-w-md w-full p-4 sm:p-6 lg:p-8 relative mx-4">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowUploadPopup(false)}
+              className="absolute top-2 sm:top-4 right-2 sm:right-4 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <FiX className="w-5 h-5 sm:w-6 sm:h-6" />
+            </button>
+
+            {/* Header with Icon */}
+            <div className="text-center mb-4 sm:mb-6">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4 bg-gradient-to-r from-green-500 to-blue-600 rounded-xl sm:rounded-2xl flex items-center justify-center">
+                <span className="text-white text-2xl sm:text-3xl">📊</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Data Upload Portal</h3>
+              <p className="text-sm sm:text-base text-gray-600">Ready to analyze your data?</p>
+            </div>
+
+            {/* Content */}
+            <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
+              <div className="bg-blue-50 rounded-lg p-3 sm:p-4">
+                <h4 className="font-semibold text-blue-900 mb-2 text-sm sm:text-base">🚀 What You Can Do:</h4>
+                <ul className="text-xs sm:text-sm text-blue-800 space-y-1">
+                  <li>• Upload patient datasets for analysis</li>
+                  <li>• Get comprehensive osteoporosis insights</li>
+                  <li>• Access advanced AI-powered predictions</li>
+                  <li>• Generate detailed risk assessments</li>
+                </ul>
+              </div>
+
+              <div className="bg-amber-50 rounded-lg p-3 sm:p-4">
+                <h4 className="font-semibold text-amber-900 mb-2 text-sm sm:text-base">⚠️ Important Notice:</h4>
+                <p className="text-xs sm:text-sm text-amber-800">
+                  Data upload functionality is currently being configured for your organization. 
+                  Please contact your system administrator to enable this feature.
+                </p>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="space-y-2 sm:space-y-3">
+              <button
+                onClick={() => {
+                  window.location.href =
+                    'mailto:omondialex3517@gmail.com?subject=Data%20Upload%20Request&body=Hello%20Admin%2C%0A%0AI%20would%20like%20to%20request%20access%20to%20the%20data%20upload%20feature%20on%20BoneHealth%20AI.%20Please%20let%20me%20know%20how%20I%20can%20proceed.%0A%0AThank%20you!';
+                  setShowUploadPopup(false);
+                }}
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2.5 sm:py-3 px-4 rounded-lg font-semibold text-sm sm:text-base hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+              >
+                Contact Admin
+              </button>
+              <button
+                onClick={() => setShowUploadPopup(false)}
+                className="w-full border-2 border-gray-300 text-gray-700 py-2.5 sm:py-3 px-4 rounded-lg font-semibold text-sm sm:text-base hover:border-blue-600 hover:text-blue-600 transition-all duration-200"
+              >
+                Maybe Later
+              </button>
+            </div>
+
+            {/* Footer */}
+            <div className="mt-4 sm:mt-6 text-center">
+              <p className="text-xs text-gray-500">
+                Need help? Email: <span className="text-blue-600">omondialex3517@gmail.com</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
