@@ -31,6 +31,9 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('username', username);
       
+      // Dispatch custom event to notify other components (like Navbar)
+      window.dispatchEvent(new Event('localStorageChange'));
+      
       // Redirect to existing dashboard after successful login
       setTimeout(() => {
         window.location.href = '/dashboard';

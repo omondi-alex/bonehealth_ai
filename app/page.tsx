@@ -56,14 +56,8 @@ export default function Home() {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('username');
     setIsLoggedIn(false);
-  }, []);
-
-  useEffect(() => {
-    // Check if user is logged in from localStorage
-    const loginStatus = localStorage.getItem('isLoggedIn');
-    if (loginStatus === 'true') {
-      setIsLoggedIn(true);
-    }
+    // Dispatch custom event to notify other components (like Navbar)
+    window.dispatchEvent(new Event('localStorageChange'));
   }, []);
 
   const handleLogin = (success: boolean) => {

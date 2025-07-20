@@ -35,6 +35,8 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     localStorage.removeItem('username');
     setIsLoggedIn(false);
     setShowLoginModal(true);
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new Event('localStorageChange'));
   };
 
   if (isLoading) {

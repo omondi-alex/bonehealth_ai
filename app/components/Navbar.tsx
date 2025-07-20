@@ -9,7 +9,42 @@ import { usePathname } from 'next/navigation';
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState('');
   const pathname = usePathname();
+
+  const checkAuthState = () => {
+    const loginStatus = localStorage.getItem('isLoggedIn');
+    const storedUsername = localStorage.getItem('username') || '';
+    
+    setIsLoggedIn(loginStatus === 'true');
+    setUsername(storedUsername);
+  };
+
+  useEffect(() => {
+    // Check authentication state from localStorage
+    checkAuthState();
+
+    // Listen for storage changes (when localStorage is modified from other components)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'isLoggedIn' || e.key === 'username') {
+        checkAuthState();
+      }
+    };
+
+    // Listen for custom events (for same-tab localStorage changes)
+    const handleCustomStorageChange = () => {
+      checkAuthState();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('localStorageChange', handleCustomStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('localStorageChange', handleCustomStorageChange);
+    };
+  }, [pathname]); // Re-check when pathname changes
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -18,7 +53,11 @@ export default function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('username');
+    setIsLoggedIn(false);
+    setUsername('');
     setIsMenuOpen(false);
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new Event('localStorageChange'));
     // Redirect to homepage after logout
     window.location.href = '/';
   };
@@ -34,10 +73,6 @@ export default function Navbar() {
     return null;
   }
 
-  // Always read login state from localStorage for render
-  const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('isLoggedIn') === 'true';
-  const username = typeof window !== 'undefined' ? localStorage.getItem('username') || '' : '';
-
   return (
     <>
       <nav className="w-full bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
@@ -50,6 +85,10 @@ export default function Navbar() {
                 // Always log out when going home
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('username');
+                setIsLoggedIn(false);
+                setUsername('');
+                // Dispatch custom event to notify other components
+                window.dispatchEvent(new Event('localStorageChange'));
               }}
             >
               <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
