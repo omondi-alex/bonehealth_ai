@@ -14,7 +14,7 @@ const tabs = [
   { label: "Overview", component: <Overview /> },
   { label: "Clinical Insights", component: <ClinicalInsights /> },
   { label: "Data Scientist View", component: <DataScienceView /> },
-  { label: "Patient View", component: <PatientView /> },
+  { label: "Patient View", component: null }, // We'll inject PatientView with callback below
 ];
 
 // Define initialForm here to pass to the provider
@@ -110,6 +110,19 @@ export default function Dashboard() {
     setActiveTab(3); // Patient View tab index
   };
 
+  // Handler to go to Clinical Insights from PatientView
+  const goToClinicalInsights = () => {
+    setActiveTab(1); // Clinical Insights tab index
+  };
+
+  // Inject PatientView with callback for the Patient View tab
+  const tabComponents = [
+    tabs[0].component,
+    tabs[1].component,
+    tabs[2].component,
+    <PatientView onRequestReport={goToClinicalInsights} key="patient-view" />,
+  ];
+
   return (
     <ProtectedRoute>
       <PredictionProvider>
@@ -120,7 +133,7 @@ export default function Dashboard() {
               {activeTab === 1 && (
                 <ClinicalInsightsModalTrigger open={showInsightsModal} setOpen={setShowInsightsModal} goToPatientView={goToPatientView} activeTab={activeTab} />
               )}
-              <div className="w-full lg:bg-white lg:rounded-xl lg:shadow lg:p-6 lg:mt-6">{tabs[activeTab].component}</div>
+              <div className="w-full lg:bg-white lg:rounded-xl lg:shadow lg:p-6 lg:mt-6">{tabComponents[activeTab]}</div>
             </div>
           </DashboardLayout>
         </PatientFormProvider>

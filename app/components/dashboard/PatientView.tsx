@@ -104,7 +104,7 @@ function getPatientTips(riskPercent: number): string[] {
   }
 }
 
-export default function PatientView() {
+export default function PatientView({ onRequestReport }: { onRequestReport?: () => void } = {}) {
   const { predictionData, loading } = usePrediction();
   const { form } = usePatientForm();
 
@@ -136,6 +136,27 @@ export default function PatientView() {
       <div className="flex flex-col items-center justify-center min-h-[40vh]">
         <FaStethoscope className="animate-spin text-blue-500 text-5xl mb-4" />
         <div className="text-blue-700 text-lg font-semibold">Analyzing patient data...</div>
+      </div>
+    );
+  }
+
+  // If no prediction/report exists, show a prompt to make a request
+  if (!predictionData || typeof predictionData.probability !== "number") {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[40vh] w-full lg:max-w-3xl lg:mx-auto bg-gradient-to-br from-blue-50 to-green-50 rounded-xl shadow-lg p-8">
+        <FaExclamationTriangle className="text-yellow-400 text-5xl mb-4" />
+        <div className="text-blue-900 text-xl font-bold mb-2 text-center">No Patient Report Found</div>
+        <div className="text-gray-700 text-base mb-6 text-center max-w-md">
+          To view a patient report, please make a request in the <span className="font-semibold text-blue-700">Clinical Insights</span> tab first.
+        </div>
+        {onRequestReport && (
+          <button
+            onClick={onRequestReport}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-blue-700 transition text-base"
+          >
+            Go to Clinical Insights
+          </button>
+        )}
       </div>
     );
   }
