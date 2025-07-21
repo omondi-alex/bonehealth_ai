@@ -36,7 +36,7 @@ export default function DashboardLayout({ children, activeTab, setActiveTab }: {
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-blue-50 to-green-50">
       {/* Sidebar (unchanged, but z-50 for topmost) */}
-      <aside className={`fixed md:static inset-y-0 left-0 z-50 w-64 bg-white bg-opacity-95 border-r border-blue-100 flex flex-col items-center py-8 shadow-2xl transform transition-transform duration-300 ease-in-out ${
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white bg-opacity-95 border-r border-blue-100 flex flex-col items-center py-8 shadow-2xl md:h-screen h-full transform transition-transform duration-300 ease-in-out ${
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
       }`}>
         <div className="mb-10 flex flex-col items-center">
@@ -44,7 +44,7 @@ export default function DashboardLayout({ children, activeTab, setActiveTab }: {
           <div className="text-2xl font-extrabold text-blue-700 tracking-tight">BoneHealth AI</div>
           <div className="text-xs text-gray-400 mt-1">Osteoporosis Dashboard</div>
         </div>
-        <nav className="flex-1 w-full">
+        <nav className="flex-1 w-full overflow-y-auto px-0 min-h-0">
           {navItems.map((item, idx) => (
             <button
               key={item.label}
@@ -66,7 +66,7 @@ export default function DashboardLayout({ children, activeTab, setActiveTab }: {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-green-50 md:ml-0">
+      <main className="flex-1 flex flex-col h-screen overflow-y-auto bg-gradient-to-br from-blue-50 to-green-50 ml-0 md:ml-64">
         {/* Mobile Navbar (matches landing page) */}
         <nav className="md:hidden w-full bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -99,8 +99,6 @@ export default function DashboardLayout({ children, activeTab, setActiveTab }: {
             onClick={() => setIsSidebarOpen(false)}
           />
         )}
-        {/* Remove old mobile header */}
-        {/* {children} */}
         {children}
       </main>
     </div>
