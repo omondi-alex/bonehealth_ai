@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { FiMenu, FiX, FiLogOut, FiUser } from 'react-icons/fi';
 import LoginModal from './LoginModal';
 import { usePathname } from 'next/navigation';
+import DataPreloader from '../services/dataPreloader';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -54,10 +55,11 @@ export default function Navbar() {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('username');
     setIsLoggedIn(false);
-    setUsername('');
-    setIsMenuOpen(false);
+    setShowLoginModal(true);
     // Dispatch custom event to notify other components
     window.dispatchEvent(new Event('localStorageChange'));
+    // Clear data preloader cache
+    DataPreloader.getInstance().clearCache();
     // Redirect to homepage after logout
     window.location.href = '/';
   };

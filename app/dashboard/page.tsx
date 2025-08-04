@@ -133,7 +133,7 @@ export default function Dashboard() {
               {activeTab === 1 && (
                 <ClinicalInsightsModalTrigger open={showInsightsModal} setOpen={setShowInsightsModal} goToPatientView={goToPatientView} activeTab={activeTab} />
               )}
-              <div className="w-full lg:bg-white lg:rounded-xl lg:shadow lg:p-6 lg:mt-6">{tabComponents[activeTab]}</div>
+              {tabComponents[activeTab]}
             </div>
           </DashboardLayout>
         </PatientFormProvider>

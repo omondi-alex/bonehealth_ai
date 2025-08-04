@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { FiMenu, FiX, FiLogOut } from 'react-icons/fi';
+import DataPreloader from "../services/dataPreloader";
 
 const navItems = [
   { label: "Overview", icon: "🏥" },
@@ -29,6 +30,8 @@ export default function DashboardLayout({ children, activeTab, setActiveTab }: {
   const handleLogout = () => {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('username');
+    // Clear data preloader cache
+    DataPreloader.getInstance().clearCache();
     // Redirect to homepage after logout
     window.location.href = '/';
   };

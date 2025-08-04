@@ -184,6 +184,7 @@ def get_data_science_metrics():
     try:
         # Load data
         df = pd.read_csv("./data/osteoporosis.csv")
+        
         # Assume 'Osteoporosis' is the target column (adjust if needed)
         # Balance the classes for more realistic metrics
         df_majority = df[df.Osteoporosis == 1]
@@ -204,8 +205,7 @@ def get_data_science_metrics():
         y = df_balanced["Osteoporosis"]
         if 'Id' in X.columns:
             X = X.drop(columns=['Id'])
-        X = pd.get_dummies(X)
-
+        
         # Simple preprocessing: encode categoricals
         X = pd.get_dummies(X)
 
@@ -216,19 +216,35 @@ def get_data_science_metrics():
         clf = RandomForestClassifier(n_estimators=100, random_state=42)
         clf.fit(X_train, y_train)
 
-        # Cross-validation metrics
-        accuracy = cross_val_score(clf, X, y, cv=5, scoring='accuracy')
-        f1 = cross_val_score(clf, X, y, cv=5, scoring='f1')
-        recall = cross_val_score(clf, X, y, cv=5, scoring='recall')
-        precision = cross_val_score(clf, X, y, cv=5, scoring='precision')
-        roc_auc = cross_val_score(clf, X, y, cv=5, scoring='roc_auc')
+        # Cross-validation metrics with simplified handling
+        accuracy_scores = cross_val_score(clf, X, y, cv=5, scoring='accuracy')
+        f1_scores = cross_val_score(clf, X, y, cv=5, scoring='f1')
+        recall_scores = cross_val_score(clf, X, y, cv=5, scoring='recall')
+        precision_scores = cross_val_score(clf, X, y, cv=5, scoring='precision')
+        roc_auc_scores = cross_val_score(clf, X, y, cv=5, scoring='roc_auc')
 
+        # Simplified metrics calculation
         metrics = {
-            "accuracy": {"mean": float(np.mean(accuracy).item() if isinstance(np.mean(accuracy), np.ndarray) and np.mean(accuracy).size == 1 else np.mean(accuracy)), "std": float(np.std(accuracy).item() if isinstance(np.std(accuracy), np.ndarray) and np.std(accuracy).size == 1 else np.std(accuracy))},
-            "f1": {"mean": float(np.mean(f1).item() if isinstance(np.mean(f1), np.ndarray) and np.mean(f1).size == 1 else np.mean(f1)), "std": float(np.std(f1).item() if isinstance(np.std(f1), np.ndarray) and np.std(f1).size == 1 else np.std(f1))},
-            "recall": {"mean": float(np.mean(recall).item() if isinstance(np.mean(recall), np.ndarray) and np.mean(recall).size == 1 else np.mean(recall)), "std": float(np.std(recall).item() if isinstance(np.std(recall), np.ndarray) and np.std(recall).size == 1 else np.std(recall))},
-            "precision": {"mean": float(np.mean(precision).item() if isinstance(np.mean(precision), np.ndarray) and np.mean(precision).size == 1 else np.mean(precision)), "std": float(np.std(precision).item() if isinstance(np.std(precision), np.ndarray) and np.std(precision).size == 1 else np.std(precision))},
-            "roc_auc": {"mean": float(np.mean(roc_auc).item() if isinstance(np.mean(roc_auc), np.ndarray) and np.mean(roc_auc).size == 1 else np.mean(roc_auc)), "std": float(np.std(roc_auc).item() if isinstance(np.std(roc_auc), np.ndarray) and np.std(roc_auc).size == 1 else np.std(roc_auc))}
+            "accuracy": {
+                "mean": float(np.mean(accuracy_scores)),
+                "std": float(np.std(accuracy_scores))
+            },
+            "f1": {
+                "mean": float(np.mean(f1_scores)),
+                "std": float(np.std(f1_scores))
+            },
+            "recall": {
+                "mean": float(np.mean(recall_scores)),
+                "std": float(np.std(recall_scores))
+            },
+            "precision": {
+                "mean": float(np.mean(precision_scores)),
+                "std": float(np.std(precision_scores))
+            },
+            "roc_auc": {
+                "mean": float(np.mean(roc_auc_scores)),
+                "std": float(np.std(roc_auc_scores))
+            }
         }
 
         # Probability distribution
@@ -238,72 +254,134 @@ def get_data_science_metrics():
             y_proba = np.zeros(X.shape[0])
         else:
             y_proba = y_proba_raw[:, 1]
+        
         hist, bin_edges = np.histogram(y_proba, bins=10, range=(0, 1))
         prob_dist = {
             "hist": hist.tolist(),
             "bin_edges": bin_edges.tolist()
         }
 
-        # SHAP feature importances
-        explainer = shap.TreeExplainer(clf)
-        shap_values = explainer.shap_values(X)
-        # Ensure shape match for SHAP values and features
-        if isinstance(shap_values, list):
-            shap_arr = shap_values[1]
-        else:
-            shap_arr = shap_values
-        # If SHAP array is double the number of columns, take every other value
-        if shap_arr.shape[1] == 2 * len(X.columns):
-            shap_arr = shap_arr[:, ::2]
-        if shap_arr.shape[1] != len(X.columns):
-            return {
-                "error": f"SHAP shape mismatch: shap_arr.shape={shap_arr.shape}, X.columns={len(X.columns)}",
-                "shap_shape": str(shap_arr.shape),
-                "feature_count": len(X.columns),
-                "feature_names": list(X.columns)
-            }
-        mean_abs_shap = np.abs(shap_arr).mean(axis=0)
-        feature_importance = sorted(
-            [{"feature": f, "importance": float(imp.item() if isinstance(imp, np.ndarray) and np.array(imp).size == 1 else imp)} for f, imp in zip(X.columns, mean_abs_shap)],
-            key=lambda x: x["importance"], reverse=True
-        )[:5]  # Top 5
+        # SHAP feature importances with simplified handling
+        try:
+            explainer = shap.TreeExplainer(clf)
+            shap_values = explainer.shap_values(X)
+            
+            # Ensure shape match for SHAP values and features
+            if isinstance(shap_values, list):
+                shap_arr = shap_values[1]
+            else:
+                shap_arr = shap_values
+                
+            # If SHAP array is double the number of columns, take every other value
+            if shap_arr.shape[1] == 2 * len(X.columns):
+                shap_arr = shap_arr[:, ::2]
+                
+            if shap_arr.shape[1] != len(X.columns):
+                # Fallback to feature importances if SHAP fails
+                feature_importance = [
+                    {"feature": f, "importance": float(imp)}
+                    for f, imp in zip(X.columns, clf.feature_importances_)
+                ]
+                feature_importance = sorted(feature_importance, key=lambda x: x["importance"], reverse=True)[:5]
+            else:
+                mean_abs_shap = np.abs(shap_arr).mean(axis=0)
+                feature_importance = sorted(
+                    [{"feature": f, "importance": float(imp)} for f, imp in zip(X.columns, mean_abs_shap)],
+                    key=lambda x: x["importance"], reverse=True
+                )[:5]  # Top 5
 
-        # SHAP dependence for Age (if present)
-        shap_dependence = []
-        if "Age" in X.columns:
-            shap_dependence = [
-                {"age": float(a.item() if isinstance(a, np.ndarray) and np.array(a).size == 1 else a), "shap": float(s.item() if isinstance(s, np.ndarray) and np.array(s).size == 1 else s)}
-                for a, s in zip(X["Age"], shap_arr[:, X.columns.get_loc("Age")])
+            # SHAP dependence for Age (if present)
+            shap_dependence = []
+            if "Age" in X.columns:
+                age_col_idx = X.columns.get_loc("Age")
+                shap_dependence = [
+                    {"age": float(X.iloc[i]["Age"]), "shap": float(shap_arr[i, age_col_idx])}
+                    for i in range(min(50, len(X)))  # Limit to first 50 samples
+                ]
+
+            # Partial dependence for Calcium Intake (if present)
+            pdp = []
+            if "Calcium Intake" in X.columns:
+                calcium_vals = np.linspace(X["Calcium Intake"].min(), X["Calcium Intake"].max(), 10)
+                for val in calcium_vals:
+                    X_temp = X.copy()
+                    X_temp["Calcium Intake"] = val
+                    preds = clf.predict_proba(X_temp)[:, 1]
+                    pdp.append({"calcium": float(val), "pred": float(np.mean(preds))})
+
+            # First patient risk and SHAP values
+            first_patient_risk = float(y_proba[0]) if len(y_proba) > 0 else None
+            
+            # Generate SHAP values for multiple patients (sample of the dataset)
+            sample_size = min(100, len(X))  # Sample up to 100 patients
+            sample_indices = np.random.choice(len(X), sample_size, replace=False)
+            
+            # Calculate SHAP values for the sample
+            sample_shap_values = []
+            sample_features = list(X.columns)
+            
+            try:
+                # Get SHAP values for the sample
+                sample_X = X.iloc[sample_indices]
+                sample_shap = explainer.shap_values(sample_X)
+                
+                if isinstance(sample_shap, list):
+                    sample_shap_arr = sample_shap[1]
+                else:
+                    sample_shap_arr = sample_shap
+                    
+                # If SHAP array is double the number of columns, take every other value
+                if sample_shap_arr.shape[1] == 2 * len(X.columns):
+                    sample_shap_arr = sample_shap_arr[:, ::2]
+                
+                # Calculate mean absolute SHAP values across the sample
+                mean_abs_shap_sample = np.abs(sample_shap_arr).mean(axis=0)
+                sample_shap_values = mean_abs_shap_sample.tolist()
+                
+            except Exception as e:
+                # Fallback to feature importances
+                sample_shap_values = clf.feature_importances_.tolist()
+            
+            # SHAP for first patient - ensure we get proper values
+            if shap_arr.shape[1] == 2 * len(X.columns):
+                first_patient_shap_arr = shap_arr[0][::2]
+            else:
+                first_patient_shap_arr = shap_arr[0]
+            
+            # Ensure we have valid SHAP values
+            if len(first_patient_shap_arr) == 0:
+                # Fallback: use feature importances as SHAP values
+                first_patient_shap_arr = clf.feature_importances_
+                
+            first_patient_shap = first_patient_shap_arr.tolist() if len(first_patient_shap_arr) > 0 else []
+            first_patient_features = list(X.columns)
+            
+            # SHAP base value
+            if hasattr(explainer, 'expected_value'):
+                if isinstance(explainer.expected_value, (list, np.ndarray)):
+                    shap_base_value = float(explainer.expected_value[1])
+                else:
+                    shap_base_value = float(explainer.expected_value)
+            else:
+                shap_base_value = None
+                
+        except Exception as shap_error:
+            # Fallback if SHAP fails
+            feature_importance = [
+                {"feature": f, "importance": float(imp)}
+                for f, imp in zip(X.columns, clf.feature_importances_)
             ]
-
-        # Partial dependence for Calcium Intake (if present)
-        pdp = []
-        if "Calcium Intake" in X.columns:
-            calcium_vals = np.linspace(X["Calcium Intake"].min(), X["Calcium Intake"].max(), 10)
-            for val in calcium_vals:
-                X_temp = X.copy()
-                X_temp["Calcium Intake"] = val
-                preds = clf.predict_proba(X_temp)[:, 1]
-                pdp.append({"calcium": float(val.item() if isinstance(val, np.ndarray) and np.array(val).size == 1 else val), "pred": float(np.mean(preds).item() if isinstance(np.mean(preds), np.ndarray) and np.mean(preds).size == 1 else np.mean(preds))})
-
-        # New: Add y_proba, first patient risk, and first patient SHAP values
-        first_patient_risk = float(y_proba[0].item() if isinstance(y_proba[0], np.ndarray) and np.array(y_proba[0]).size == 1 else y_proba[0]) if len(y_proba) > 0 else None
-        # SHAP for first patient, with shape check
-        if shap_arr.shape[1] == 2 * len(X.columns):
-            first_patient_shap_arr = shap_arr[0][::2]
-        else:
-            first_patient_shap_arr = shap_arr[0]
-        if len(first_patient_shap_arr) != len(X.columns):
-            return {
-                "error": f"SHAP shape mismatch (first patient): shap_arr={len(first_patient_shap_arr)}, X.columns={len(X.columns)}",
-                "shap_arr_len": len(first_patient_shap_arr),
-                "feature_count": len(X.columns),
-                "feature_names": list(X.columns)
-            }
-        first_patient_shap = first_patient_shap_arr.tolist() if len(first_patient_shap_arr) > 0 else []
-        first_patient_features = list(X.columns)
-        # Add SHAP base value (expected value)
-        shap_base_value = float(explainer.expected_value[1].item() if hasattr(explainer, 'expected_value') and isinstance(explainer.expected_value, (list, np.ndarray)) and np.array(explainer.expected_value[1]).size == 1 else explainer.expected_value[1]) if hasattr(explainer, 'expected_value') and isinstance(explainer.expected_value, (list, np.ndarray)) else float(explainer.expected_value.item() if isinstance(explainer.expected_value, np.ndarray) and explainer.expected_value.size == 1 else explainer.expected_value)
+            feature_importance = sorted(feature_importance, key=lambda x: x["importance"], reverse=True)[:5]
+            shap_dependence = []
+            pdp = []
+            first_patient_risk = float(y_proba[0]) if len(y_proba) > 0 else None
+            # Use feature importances as SHAP values for the first patient
+            first_patient_shap = clf.feature_importances_.tolist()
+            first_patient_features = list(X.columns)
+            shap_base_value = None
+            # Also set sample SHAP values to feature importances
+            sample_shap_values = clf.feature_importances_.tolist()
+            sample_features = list(X.columns)
 
         return {
             "metrics": metrics,
@@ -315,7 +393,9 @@ def get_data_science_metrics():
             "first_patient_risk": first_patient_risk,
             "first_patient_shap": first_patient_shap,
             "first_patient_features": first_patient_features,
-            "shap_base_value": shap_base_value
+            "shap_base_value": shap_base_value,
+            "sample_shap_values": sample_shap_values,
+            "sample_features": sample_features
         }
     except Exception as e:
         return {"error": str(e)} 

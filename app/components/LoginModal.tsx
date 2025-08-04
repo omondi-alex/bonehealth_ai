@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { FiX, FiEye, FiEyeOff, FiUser, FiLock } from 'react-icons/fi';
+import DataPreloader from '../services/dataPreloader';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -34,6 +35,16 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
       
       // Dispatch custom event to notify other components (like Navbar)
       window.dispatchEvent(new Event('localStorageChange'));
+      
+      // Start preloading data science metrics immediately
+      const dataPreloader = DataPreloader.getInstance();
+      
+      // Start preloading in the background but don't wait for it
+      dataPreloader.preloadData().then(() => {
+        // Preload completed successfully
+      }).catch(error => {
+        console.error('Failed to preload data:', error);
+      });
       
       // Show redirect loader immediately
       setShowRedirectLoader(true);

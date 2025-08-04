@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import LoginModal from './LoginModal';
+import DataPreloader from '../services/dataPreloader';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -44,6 +45,8 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     setShowLoginModal(true);
     // Dispatch custom event to notify other components
     window.dispatchEvent(new Event('localStorageChange'));
+    // Clear cache
+    DataPreloader.getInstance().clearCache();
   };
 
   if (isLoading) {
