@@ -22,6 +22,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/boneAI.png" type="image/png" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-white text-black`}>
         <Navbar />
         {children}

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { FiX, FiEye, FiEyeOff, FiUser, FiLock } from 'react-icons/fi';
+import Image from 'next/image';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -85,8 +86,14 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
 
         {/* Header */}
         <div className="text-center mb-4 sm:mb-8">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl sm:rounded-2xl flex items-center justify-center">
-            <span className="text-white font-bold text-lg sm:text-xl">BH</span>
+          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4 relative">
+            <Image
+              src="/boneAI.png"
+              alt="BoneHealth AI Logo"
+              width={80}
+              height={80}
+              className="rounded-xl sm:rounded-2xl"
+            />
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Welcome Back</h2>
           <p className="text-sm sm:text-base text-gray-600">Sign in to access BoneHealth AI</p>

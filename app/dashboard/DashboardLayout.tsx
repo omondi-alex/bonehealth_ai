@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { FiMenu, FiX, FiLogOut } from 'react-icons/fi';
+import Image from 'next/image';
 import DataPreloader from "../services/dataPreloader";
 
 const navItems = [
@@ -75,8 +76,14 @@ export default function DashboardLayout({ children, activeTab, setActiveTab }: {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-4">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">BH</span>
+                <div className="w-8 h-8 relative">
+                  <Image
+                    src="/boneAI.png"
+                    alt="BoneHealth AI Logo"
+                    width={32}
+                    height={32}
+                    className="rounded-lg"
+                  />
                 </div>
                 <span className="font-bold text-xl text-gray-900">BoneHealth AI</span>
               </div>

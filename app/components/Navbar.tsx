@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { FiMenu, FiX, FiLogOut, FiUser } from 'react-icons/fi';
 import LoginModal from './LoginModal';
@@ -93,8 +94,14 @@ export default function Navbar() {
                 window.dispatchEvent(new Event('localStorageChange'));
               }}
             >
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">BH</span>
+              <div className="w-8 h-8 relative">
+                <Image
+                  src="/boneAI.png"
+                  alt="BoneHealth AI Logo"
+                  width={32}
+                  height={32}
+                  className="rounded-lg"
+                />
               </div>
               <span className="font-bold text-xl text-gray-900">BoneHealth AI</span>
             </a>
